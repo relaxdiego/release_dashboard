@@ -48,6 +48,10 @@ def stringify(ver)
   s
 end
 
+puts "Committing version.yml to #{/\* (.+)/.match(`git branch`)[1]}"
+`git add #{vpath}`
+`git commit -m 'Update version to #{stringify(ver)}'`
+
 puts "Creating #{stringify(ver)} tag in git"
 `git tag -a #{stringify(ver)} -m 'Tagging #{stringify(ver)}'`
 
