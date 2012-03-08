@@ -192,7 +192,11 @@
 
       RD.listReleases = function(){
         $(RD.releases).each(function(index, release){
-          $('#container').append('<h2>' + release.fields.summary + ' - ' + release.fields.status.name + '</h2>');
+          var title = $(document.createElement('h2'));
+          title.addClass('release-name');
+          title.html("<a href='/show_release/" + release.key + "' target='__rdashboard'/>");
+          title.children().first().text(release.fields.summary + ' - ' + release.fields.status.name);
+          $('#container').append(title);
 
           var table = $('#status-template').clone().children().first();
           $('#container').append(table);
