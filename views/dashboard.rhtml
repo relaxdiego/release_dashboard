@@ -173,6 +173,7 @@
       RD.processData = function(){
         RD.indexIssues();
         if(RD.dataIsIncomplete()){
+          RD.showProgress();
           RD.getData(RD.data.issues.length);
         } else {
           RD.findReleases();
@@ -185,6 +186,11 @@
           return true
         }
         return false;
+      }
+
+      RD.showProgress = function(){
+        var progress = (RD.data.issues.length + RD.data.startAt + 1) / RD.data.total * 100;
+        $("#loading-text .text").text('Loading ' + progress.toFixed(0) + '%');
       }
 
       RD.getData = function(startAtIndex){
