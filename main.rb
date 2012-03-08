@@ -8,17 +8,17 @@ module ReleaseDashboard
 
     # Helper methods
     def curl(path)
-      if session[:host] && session[:username] && session[:password]
-        content_type :json
-        `curl -k -u #{session[:username]}:#{session[:password]} -X GET -H "Content-Type: application/json" "https://#{session[:host]}/rest/api/2/#{path}"`
-      else
-        show_missing_sessionvars
-      end
+      content_type :json
+      `curl -k -u #{session[:username]}:#{session[:password]} -X GET -H "Content-Type: application/json" "https://#{session[:host]}/rest/api/2/#{path}"`
     end
 
-    def get_missing_vars
+    def session_var_keys
+      [:host, :username, :password]
+    end
+
+    def missing_vars
       missing = []
-      [:host, :username, :password].each do |key|
+      session_var_keys.each do |key|
         missing << key unless session[key]
       end
       missing
@@ -26,10 +26,8 @@ module ReleaseDashboard
 
     # Runs before every route
     before do
-      missing = get_missing_vars
-
-      if missing.length > 0 && !['/yunologin', '/', '/start'].include?(request.path_info)
-        redirect to('/yunologin')
+      if missing_vars.length > 0 && !['/', '/login', '/logout'].include?(request.path_info)
+        redirect to('/')
       end
     end
 
