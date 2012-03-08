@@ -157,6 +157,14 @@
             RD.releases.push(issue);
           }
         });
+      RD.getData = function(startAtIndex){
+        $.ajax({
+          url: '/releases/' + startAtIndex,
+          success: function(data){
+            RD.data = data;
+            RD.processData();
+          }
+        })
       }
 
       RD.listReleases = function(){
@@ -194,15 +202,7 @@
         $(this).removeClass('loading');
       });
 
-      $.ajax({
-        url: '/releases',
-        success: function(data){
-          RD.data = data;
-          RD.indexIssues();
-          RD.findReleases();
-          RD.listReleases();
-        }
-      })
+      RD.getData(0);
     </script>
   </body>
 </html>
