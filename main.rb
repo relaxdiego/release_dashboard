@@ -24,6 +24,18 @@ module ReleaseDashboard
       missing
     end
 
+    def current_version
+      vpath = File.expand_path('../version.yml',  __FILE__)
+      vfile = File.open(vpath, 'r')
+      ver = YAML.load_file(vfile)
+
+      s = "v#{ver['major']}.#{ver['minor']}.#{ver['patch']}"
+      unless ver['pre-release'].empty?
+        s << "-#{ver['pre-release']}"
+      end
+      s
+    end
+
     # Runs before every route
     before do
       if missing_vars.length > 0 && !['/', '/login', '/logout'].include?(request.path_info)
