@@ -8,7 +8,6 @@ module ReleaseDashboard
 
     # Helper methods
     def curl(path)
-      content_type :json
       `curl -k -u #{session[:username]}:#{session[:password]} -X GET -H "Content-Type: application/json" "https://#{session[:host]}/rest/api/2/#{path}"`
     end
 
@@ -50,7 +49,7 @@ module ReleaseDashboard
 
     post '/login' do
       session_var_keys.each do |key|
-        session[key]     = params[key]
+        session[key] = params[key]
       end
       redirect to('/dashboard'), 303
     end
@@ -63,6 +62,7 @@ module ReleaseDashboard
     end
 
     get '/releases/:start_at_index' do
+      content_type :json
       curl "search?jql=project=MCR&startAt=#{params[:start_at_index]}"
     end
 

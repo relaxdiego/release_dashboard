@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Status Dashboard</title>
+    <title>Release Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -168,19 +168,19 @@
           if(issue.fields.parent == null &&
              issue.fields.summary.match(/release template/ig) == null){
             RD.releases.push(issue);
-            console.log(issue);
           }
         }
+        RD.releases.reverse();
       }
 
       RD.processData = function(){
         RD.indexIssues();
         if(RD.dataIsIncomplete()){
-          RD.showProgress();
+          RD.updateProgress();
           RD.getData(RD.data.issues.length);
         } else {
           RD.findReleases();
-          RD.listReleases();
+          RD.displayReleases();
         }
       }
 
@@ -191,7 +191,7 @@
         return false;
       }
 
-      RD.showProgress = function(){
+      RD.updateProgress = function(){
         var progress = (RD.data.issues.length + RD.data.startAt + 1) / RD.data.total * 100;
         $("#loading-text .text").text('Loading ' + progress.toFixed(0) + '%');
       }
@@ -206,7 +206,7 @@
         })
       }
 
-      RD.listReleases = function(){
+      RD.displayReleases = function(){
         $(RD.releases).each(function(index, release){
           var title = $(document.createElement('h2'));
           title.addClass('release-name');
