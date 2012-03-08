@@ -45,6 +45,13 @@ module ReleaseDashboard
       redirect to('/dashboard'), 303
     end
 
+    get '/logout' do
+      session_var_keys.each do |key|
+        session[key] = nil
+      end
+      redirect to('/'), 303
+    end
+
     get '/releases/:start_at_index' do
       curl "search?jql=project=MCR&startAt=#{params[:start_at_index]}"
     end
