@@ -31,6 +31,7 @@
 
       td {
         border: 1px solid black;
+        padding: 3px;
         width: 11%;
       }
 
@@ -38,8 +39,14 @@
         display: none;
       }
 
-      td.open {
+      td.header{
         background-color: gray;
+        color: white;
+      }
+
+      td.open {
+        background-color: #336699;
+        color: white;
       }
 
       td.in-progress, td.resolved, td.reopened{
@@ -79,13 +86,13 @@
     </div>
 
     <div id="container" class="container">
-      <h1 id="loading-text"><img src="/images/ajax-loader.gif"/> Loading</h1>
+      <h1 id="loading-text"><img src="/images/ajax-loader.gif"/> <span class="text">Loading 0%</span></h1>
     </div> <!-- /container -->
 
     <div id="status-template">
       <table class="status-root">
         <tr>
-          <td>Activity</td>
+          <td class='header'>Activity</td>
           <td></td>
           <td></td>
           <td></td>
@@ -96,7 +103,7 @@
           <td></td>
         </tr>
         <tr>
-          <td>Assignee</td>
+          <td class='header'>Assignee</td>
           <td></td>
           <td></td>
           <td></td>
@@ -107,7 +114,7 @@
           <td></td>
         </tr>
         <tr>
-          <td>Due Date</td>
+          <td class='header'>Due Date</td>
           <td></td>
           <td></td>
           <td></td>
@@ -118,7 +125,7 @@
           <td></td>
         </tr>
         <tr>
-          <td>Status</td>
+          <td class='header'>Status</td>
           <td></td>
           <td></td>
           <td></td>
