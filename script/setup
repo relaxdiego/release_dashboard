@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+echo -e "\033[0;32mSetting up the release dashboard\033[m"
+
+RD_FORCE_SETUP=0
+
+if [ $RD_FORCE_SETUP -eq 1 ]; then
+  echo -e "\033[0;31mForcing script/setup!\033[m"
+fi
+
+# Ensure that Bundler is installed
+if [ -z `command -v bundle` ] ; then
+    echo "Installing bundler gem..."
+    gem install bundler -v=1.0.22
+fi
+
+# Install required gems
+echo "Installing required gems..."
+bundle install --binstubs
+
+if [ $RD_FORCE_SETUP -eq 1 ]; then
+  echo "Removing the Release Dashboard symlink from ~/.pow"
+  rm ~/.pow/rd
+fi
+
+# Add Release Dashboard to Pow if it's not already there
+if [ ! -e ~/.pow/rd ] ; then
+  echo "Adding Release Dashboard to Pow"
+  RD_INSTALL_PATH=`pwd`
+  ln -s $RD_INSTALL_PATH ~/.pow/rd
+fi
+
+# Restart the server
+echo "Restarting Release Dashboard"
+touch tmp/restart.txt
+
+echo -e "\033[0;32mSetup is done. Now go to http://rd.dev"
