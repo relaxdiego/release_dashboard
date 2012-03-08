@@ -3,17 +3,32 @@
 require 'rubygems'
 require 'yaml'
 
-if !(/major|minor|patch|pre-release/.match(ARGV[0])) ||
-   (ARGV[0] == 'pre-release' && ARGV[1].nil?)
-  puts "Usage: `script/release major|minor|patch|pre-release [pre-release version]`"
-  puts "To remove the pre-release version without incrementing the version, use `script/release final`"
-  exit
-end
-
 vpath = File.expand_path('../../version.yml',  __FILE__)
 vfile = File.open(vpath, 'r+')
 ver = YAML.load_file(vfile)
 vfile.close
+was_prerelease = !ver['pre-release'].empty?
+
+if !(/major|minor|patch|pre|final/.match(ARGV[0])) ||
+   (ARGV[0] == 'pre' && ARGV[1].nil?) ||
+   (ARGV[0] == 'pre' && !was_prerelease)
+  puts %{
+    Usage: `script/release major|minor|patch|pre|final [pre-release version]`
+
+    Examples:
+      Assume original version is v1.5.2 in each of the following examples.
+        script/release major         => v2.0.0
+        script/release major beta1   => v2.0.0-beta1
+        script/release minor         => v1.6.0
+        script/release pre beta4     => (Not allowed since original version is already final)
+
+      Assume original version is v1.2.3-alpha1
+        script/release pre alpha2    => v1.2.3-alpha2
+        script/release pre beta2     => v1.2.3-beta2
+        script/release final         => v1.2.3
+  }
+  exit
+end
 
 case ARGV[0]
 when 'major'
@@ -28,10 +43,18 @@ when 'minor'
 when 'patch'
   ver['patch'] = ver['patch'] + 1
   ver['pre-release'] = ''
-when 'pre-release'
-  ver['pre-release'] = ARGV[1]
 when 'final'
   ver['pre-release'] = ''
+end
+
+# This is a separate if condition so that the user
+# can say `script/release pre beta1` (which
+# appends a pre-release version to the existing version)
+# as well as say `script/release minor beta1 (which
+# bumps the minor version while attaching a pre-release
+# version to it at the same time).
+if (ARGV[0]=='pre' || ARGV[1]) && ARGV[0] != 'final'
+  ver['pre-release'] = ARGV[1]
 end
 
 puts "Updating version.yml file with #{ver}"
