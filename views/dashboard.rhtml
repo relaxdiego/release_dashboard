@@ -152,11 +152,34 @@
       }
 
       RD.findReleases = function(){
-        $(RD.data.issues).each(function(index, issue){
-          if(issue.fields.parent == null){
+        var issue;
+        for(var key in RD.issues){
+          issue = RD.issues[key];
+          if(issue.fields.parent == null &&
+             issue.fields.summary.match(/release template/ig) == null){
             RD.releases.push(issue);
+            console.log(issue);
           }
-        });
+        }
+      }
+
+      RD.processData = function(){
+        RD.indexIssues();
+        if(RD.dataIsIncomplete()){
+          RD.getData(RD.data.issues.length);
+        } else {
+          RD.findReleases();
+          RD.listReleases();
+        }
+      }
+
+      RD.dataIsIncomplete = function(){
+        if(RD.data.issues.length + RD.data.startAt + 1 < RD.data.total){
+          return true
+        }
+        return false;
+      }
+
       RD.getData = function(startAtIndex){
         $.ajax({
           url: '/releases/' + startAtIndex,
