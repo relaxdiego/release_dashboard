@@ -10,7 +10,7 @@ module ReleaseDashboard
     def curl(path)
       if session[:host] && session[:username] && session[:password]
         content_type :json
-        `curl -k -u #{session[:username]}:#{session[:password]} -X GET -H "Content-Type: application/json" https://#{session[:host]}/rest/api/2/#{path}`
+        `curl -k -u #{session[:username]}:#{session[:password]} -X GET -H "Content-Type: application/json" "https://#{session[:host]}/rest/api/2/#{path}"`
       else
         show_missing_sessionvars
       end
