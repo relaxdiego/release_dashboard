@@ -50,8 +50,8 @@ module ReleaseDashboard
       curl "search?jql=project=MCR&startAt=#{params[:start_at_index]}"
     end
 
-    get '/issue/:issue_id' do
-      curl 'issue/#{params[:issue_id]}'
+    get '/show_release/:issue_key' do
+      redirect to("https://#{session[:host]}/browse/#{params[:issue_key]}")
     end
 
     get '/' do
