@@ -38,10 +38,10 @@ module ReleaseDashboard
       erb :login_form
     end
 
-    post '/start' do
-      session[:host]     = params[:host]
-      session[:username] = params[:username]
-      session[:password] = params[:password]
+    post '/login' do
+      session_var_keys.each do |key|
+        session[key]     = params[key]
+      end
       redirect to('/dashboard'), 303
     end
 
