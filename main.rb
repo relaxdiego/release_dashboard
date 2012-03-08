@@ -46,8 +46,8 @@ module ReleaseDashboard
       redirect to('/dashboard'), 303
     end
 
-    get '/releases' do
-      curl "search?jql='project=MCR'&maxResults=1000"
+    get '/releases/:start_at_index' do
+      curl "search?jql=project=MCR&startAt=#{params[:start_at_index]}"
     end
 
     get '/issue/:issue_id' do
