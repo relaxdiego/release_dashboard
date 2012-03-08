@@ -5,7 +5,7 @@ Prerequisites
 -------------
 1. [Git](http://git-scm.com) 1.7.0+
 2. [RVM](http://beginrescueend.com/) 1.10.2+
-3. [Ruby](ruby-lang.org/) 1.9.3-p125 (Should be managed by RVM)
+3. [Ruby](ruby-lang.org/) 1.9.3-p125 (Should be installed via RVM)
 4. [Pow](http://pow.cx/) 0.3.2+
 
 More Prerequisites for Mac
@@ -61,13 +61,9 @@ Developer Tips
 
 Helpful references for development
 ----------------------------------
-1. [Capybara DSL](http://rubydoc.info/github/jnicklas/capybara/master) - Learn about the DSL used in the tests.
-2. [Cucumber](http://cukes.info) - Learn about the Cucumber framework. The Cucumber Book is highly recommended.
-3. [Rspec-Rails](http://rubydoc.info/gems/rspec-rails/frames) - Background information about the testing framework used for Mign.
-4. [Factory Girl](https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md) - Learn about the dynamic fixture library used in the tests.
-5. [Guard](https://github.com/guard/guard) - Learn about what files are watched (for changes) and how tests gets executed automatically.
-6. [Devise](https://github.com/plataformatec/devise) - The authentication engine used with Mign.
-7. [CanCan](https://github.com/ryanb/cancan) - The authorization gem used by Mign.
+1. [Sinatra](http://www.sinatrarb.com/) - The DSL used for creating the backend of the dashboard
+2. [Bootstrap](http://twitter.github.com/bootstrap) - CSS and JS library used to design the UI
+3. [jQuery](http://jquery.com/) - Javascript library used to do the AJAXy stuff
 
 License
 -------

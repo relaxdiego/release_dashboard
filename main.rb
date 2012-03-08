@@ -6,33 +6,62 @@ module ReleaseDashboard
   class Application < Sinatra::Base
     enable :sessions
 
-    get '/start/:host/:username/:password' do
+    # Helper methods
+    def curl(path)
+      if session[:host] && session[:username] && session[:password]
+        content_type :json
+        `curl -k -u #{session[:username]}:#{session[:password]} -X GET -H "Content-Type: application/json" https://#{session[:host]}/rest/api/2/#{path}`
+      else
+        show_missing_sessionvars
+      end
+    end
+
+    def get_missing_vars
+      missing = []
+      [:host, :username, :password].each do |key|
+        missing << key unless session[key]
+      end
+      missing
+    end
+
+    # Runs before every route
+    before do
+      missing = get_missing_vars
+
+      if missing.length > 0 && !['/yunologin', '/', '/start'].include?(request.path_info)
+        redirect to('/yunologin')
+      end
+    end
+
+    # Routes
+    get '/yunologin' do
+      missing = get_missing_vars
+      "#{missing} missing. please <a href='/'>log in again</a>."
+    end
+
+    post '/start' do
       session[:host]     = params[:host]
       session[:username] = params[:username]
       session[:password] = params[:password]
-      if session[:host] && session[:username] && session[:password]
-        "OK"
-      else
-        "You missed a spot"
-      end
+      redirect to('/dashboard'), 303
+    end
+
+    get '/releases' do
+      curl "search?jql='project=MCR'&maxResults=1000"
     end
 
     get '/issue/:issue_id' do
-      if session[:host] && session[:username] && session[:password]
-        content_type :json
-        `curl -k -u #{session[:username]}:#{session[:password]} -X GET -H "Content-Type: application/json" https://#{session[:host]}/rest/api/2/issue/#{params[:issue_id]}`
-      else
-        missing = []
-        [:host, :username, :password].each do |key|
-          missing << key unless session[key]
-        end
-        "#{missing} missing."
-      end
+      curl 'issue/#{params[:issue_id]}'
     end
 
     get '/' do
+      erb :start_form
+    end
+
+    get '/dashboard' do
       erb :dashboard
     end
+
   end
 
 end
