@@ -22,7 +22,7 @@ Installation
 Usage
 -----
 1. Point your browser to `http://rd.dev`
-2. Learn more about the features by opening `doc/features.html` with your favorite browser
+2. There is no step 2
 
 Found a bug?
 ------------
@@ -42,9 +42,9 @@ Contributing
 
 Helpful references for development
 ----------------------------------
-1. [Sinatra](http://www.sinatrarb.com/) - The DSL used for creating the backend of the dashboard
-2. [Bootstrap](http://twitter.github.com/bootstrap) - CSS and JS library used to design the UI
-3. [jQuery](http://jquery.com/) - Javascript library used to do the AJAXy stuff
+1. [Sinatra](http://www.sinatrarb.com/) - The DSL used for creating the backend logic
+2. [Bootstrap](http://twitter.github.com/bootstrap) - CSS and JS library used to create the UI
+3. [jQuery](http://jquery.com/) - Javascript library used for doing the AJAXy stuff
 
 License
 -------
