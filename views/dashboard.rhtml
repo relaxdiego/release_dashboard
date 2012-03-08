@@ -213,11 +213,9 @@
             $(activityCells[i]).text(subtask.fields.summary);
             $(statusCells[i]).text(subtask.fields.status.name);
             $(statusCells[i]).addClass(RD.cssify(subtask.fields.status.name));
-            $(assigneeCells[i]).text(subtask.fields.assignee.name);
+            $(assigneeCells[i]).text(subtask.fields.assignee.displayName);
             $(targetDateCells[i]).text(subtask.fields.duedate);
           }
-
-          console.log(release);
         });
       }
 
