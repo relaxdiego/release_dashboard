@@ -31,7 +31,7 @@ module ReleaseDashboard
     end
 
     get '/' do
-      "Hello World!"
+      erb :dashboard
     end
   end
 
