@@ -34,9 +34,8 @@ module ReleaseDashboard
     end
 
     # Routes
-    get '/yunologin' do
-      missing = get_missing_vars
-      "#{missing} missing. please <a href='/'>log in again</a>."
+    get '/' do
+      erb :login_form
     end
 
     post '/start' do
@@ -52,10 +51,6 @@ module ReleaseDashboard
 
     get '/show_release/:issue_key' do
       redirect to("https://#{session[:host]}/browse/#{params[:issue_key]}")
-    end
-
-    get '/' do
-      erb :start_form
     end
 
     get '/dashboard' do
