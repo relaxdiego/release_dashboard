@@ -10,7 +10,7 @@ Prerequisites
 
 More Prerequisites for Mac
 --------------------------
-1. [Command Line Tools](https://developer.apple.com/downloads/index.action)
+1. Xcode 4.1+ or [Command Line Tools](https://developer.apple.com/downloads/index.action)
 2. If you have Xcode 4.2+, you'll want to work around LLVM GCC. Here's [a suggestion](http://www.relaxdiego.com/2012/02/using-gcc-when-xcode-43-is-installed.html).
 
 Installation
