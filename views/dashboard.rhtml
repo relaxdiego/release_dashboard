@@ -214,12 +214,14 @@
           var table = $('#status-template').clone().children().first();
           $('#container').append(table);
 
-          var subTasks = release.fields.subtasks
-          var numColumns = $($(table.children()[0]).children()[0]).children().length;
-          var activityCells = $($(table.children()[0]).children()[0]).children();
-          var assigneeCells = $($(table.children()[0]).children()[1]).children();
-          var targetDateCells = $($(table.children()[0]).children()[2]).children();
-          var statusCells = $($(table.children()[0]).children()[3]).children();
+          var subTasks        = release.fields.subtasks
+          var numColumns      = $($(table.children()[0]).children()[0]).children().length;
+          var rows            = $(table.children()[0]);
+
+          var activityCells   = $(rows.children()[0]).children();
+          var assigneeCells   = $(rows.children()[1]).children();
+          var targetDateCells = $(rows.children()[2]).children();
+          var statusCells     = $(rows.children()[3]).children();
 
           for(var i = 1; i < numColumns; i++){
             var subtask = RD.issues[subTasks[i-1].key];
