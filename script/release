@@ -86,7 +86,7 @@ ver = YAML.load_file(vfile)
 vfile.close
 was_prerelease = !ver['pre-release'].empty?
 previous_release = stringify(ver)
-previous_logs = `git log --pretty=format:"%h %s" #{previous_release}..head 2>/dev/null`
+previous_logs = `git log --pretty=format:" - %h %s" #{previous_release}..head 2>/dev/null`
 
 # Legacy support. In case the repo still uses the vX.Y.Z format for final versions
 # instead of the vX.Y.Z-final format which is used by this script.
@@ -154,9 +154,9 @@ puts "Committing version.yml to #{/\* (.+)/.match(`git branch`)[1]}"
 `git add #{vpath}`
 `git commit -F- <<EOF
 Update version to #{stringify(ver)}
---------------------------------
+-----------------------------------
 Changes since #{previous_release}:
-#{previous_logs.empty? ? "(none)" : previous_logs}
+#{previous_logs.empty? ? " (none)" : previous_logs}
 EOF`
 
 puts "Creating #{stringify(ver)} tag in git"
