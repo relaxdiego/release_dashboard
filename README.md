@@ -1,20 +1,20 @@
 Release Dashboard
 =================
 
-Prerequisites
--------------
+Dev Environment Prerequisites
+-----------------------------
 1. [Git](http://git-scm.com)
 2. [RVM](http://beginrescueend.com/) 1.10.2+
 3. [Ruby](ruby-lang.org/) 1.9.3-p125 (Should be installed via RVM)
 4. [Pow](http://pow.cx/) 0.3.2+
+5. Xcode 4.1+ or [Command Line Tools](https://developer.apple.com/downloads/index.action)
 
-More Prerequisites for Mac
+Got Xcode 4.2 or above?
 --------------------------
-1. Xcode 4.1+ or [Command Line Tools](https://developer.apple.com/downloads/index.action)
-2. If you have Xcode 4.2+, you'll want to work around LLVM GCC. Here's [a suggestion](http://www.relaxdiego.com/2012/02/using-gcc-when-xcode-43-is-installed.html).
+You'll want to work around LLVM GCC. Here's [a suggestion](http://www.relaxdiego.com/2012/02/using-gcc-when-xcode-43-is-installed.html).
 
-Installation
-------------
+Dev Environment Installation
+----------------------------
 1. `git clone https://github.com/relaxdiego/release_dashboard`
 2. `cd release_dashboard` (if RVM asks, trust the .rvmrc file)
 3. `script/setup`
