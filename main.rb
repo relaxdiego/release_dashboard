@@ -68,9 +68,7 @@ module ReleaseDashboard
       ver = YAML.load_file(vfile)
 
       s = "v#{ver['major']}.#{ver['minor']}.#{ver['patch']}"
-      unless ver['pre-release'].empty?
-        s << "-#{ver['pre-release']}"
-      end
+      s << " (#{ver['pre-release']})".gsub('.', ' ') unless ver['pre-release'].empty?
       s
     end
   end #class Application < Sinatra::Base
