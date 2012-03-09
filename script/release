@@ -3,31 +3,90 @@
 require 'rubygems'
 require 'yaml'
 
+def already_prerelease?
+  was_prerelease
+end
+
+def stringify(ver)
+  s = "v#{ver['major']}.#{ver['minor']}.#{ver['patch']}"
+  unless ver['pre-release'].empty?
+    s << "-#{ver['pre-release']}"
+  end
+  s
+end
+
+def get_error(was_prerelease)
+  if !(/major|minor|patch|pre|finalize/.match(ARGV[0]))
+    "You must specify major, minor, patch, pre, or finalize as the first argument"
+  elsif (/major|minor|patch/.match(ARGV[0]) && ARGV[1].nil?)
+    "You must supply a second argument (e.g. beta.1, beta.2, final)"
+  elsif (ARGV[0]=='finalize' && ARGV[1] && ARGV[1] != 'final')
+    "You're confusing me. Do you want to finalize this version or not??"
+  elsif (/major|minor|patch/.match(ARGV[0]) && was_prerelease)
+    "You can't increment the #{ARGV[0]} version until you finalize the current one"
+  elsif (ARGV[0] == 'pre' && ARGV[1].nil?)
+    "You have to supply a second argument with pre (e.g. script/release pre alpha.3)"
+  elsif (ARGV[0] == 'pre' && !was_prerelease)
+    "You can't attach a pre-release version to a final release"
+  else
+    false
+  end
+end
+
+def show_help
+  puts %{
+    Usage: `script/release major|minor|patch|pre pre-release-version`
+           `script/release finalize`
+           `script/release help`
+
+    Examples:
+      Assume original version is v1.2.3 in each of the following examples.
+        script/release major beta.1   => v2.0.0-beta.1
+        script/release major final    => v2.0.0
+        script/release minor beta.1   => v1.3.0-beta.1
+        script/release minor final    => v1.3.0
+        script/release patch beta.2   => v1.2.4-beta.2
+        script/release patch final    => v1.2.4
+        script/release pre beta.4     => (Not allowed since original version is already final)
+
+      Assume original version is v1.2.3-alpha1
+        script/release pre alpha.2    => v1.2.3-alpha.2
+        script/release pre beta.2     => v1.2.3-beta.2
+        script/release finalize       => v1.2.3
+        script/release pre            => (Not allowed. You must supply a pre-release version)
+        script/release major beta.1   => (Not allowed since original version is not yet final)
+  }
+end
+
 vpath = File.expand_path('../../version.yml',  __FILE__)
 vfile = File.open(vpath, 'r+')
 ver = YAML.load_file(vfile)
 vfile.close
 was_prerelease = !ver['pre-release'].empty?
+previous_release = stringify(ver)
+previous_logs = `git log --pretty=format:"%h %s" #{previous_release}..head`
 
-if !(/major|minor|patch|pre|final/.match(ARGV[0])) ||
-   (ARGV[0] == 'pre' && ARGV[1].nil?) ||
-   (ARGV[0] == 'pre' && !was_prerelease)
-  puts %{
-    Usage: `script/release major|minor|patch|pre|final [pre-release version]`
+puts "Current version is #{previous_release}"
 
-    Examples:
-      Assume original version is v1.5.2 in each of the following examples.
-        script/release major         => v2.0.0
-        script/release major beta1   => v2.0.0-beta1
-        script/release minor         => v1.6.0
-        script/release pre beta4     => (Not allowed since original version is already final)
+if ARGV[0]=='help'
+  show_help
+  exit 0
+end
 
-      Assume original version is v1.2.3-alpha1
-        script/release pre alpha2    => v1.2.3-alpha2
-        script/release pre beta2     => v1.2.3-beta2
-        script/release final         => v1.2.3
-  }
-  exit
+if ARGV[0]=='finalize' && !was_prerelease
+  puts "Nothing to do. Current version is already final."
+  exit 0
+end
+
+if previous_logs.empty?
+  puts "Nothing to do. There hasn't been any new commits since #{previous_release}"
+  exit 1
+end
+
+if get_error(was_prerelease)
+  puts "ERROR: #{get_error(was_prerelease)}"
+  show_help
+  exit 1
 end
 
 case ARGV[0]
@@ -43,17 +102,11 @@ when 'minor'
 when 'patch'
   ver['patch'] = ver['patch'] + 1
   ver['pre-release'] = ''
-when 'final'
+when 'finalize'
   ver['pre-release'] = ''
 end
 
-# This is a separate if condition so that the user
-# can say `script/release pre beta1` (which
-# appends a pre-release version to the existing version)
-# as well as say `script/release minor beta1 (which
-# bumps the minor version while attaching a pre-release
-# version to it at the same time).
-if (ARGV[0]=='pre' || ARGV[1]) && ARGV[0] != 'final'
+if ARGV[0] != 'finalize' && ARGV[1] != 'final'
   ver['pre-release'] = ARGV[1]
 end
 
@@ -63,19 +116,17 @@ File.open(vpath, 'w' ) do |out|
   YAML.dump(ver, out)
 end
 
-def stringify(ver)
-  s = "v#{ver['major']}.#{ver['minor']}.#{ver['patch']}"
-  unless ver['pre-release'].empty?
-    s << "-#{ver['pre-release']}"
-  end
-  s
-end
-
 puts "Committing version.yml to #{/\* (.+)/.match(`git branch`)[1]}"
 `git add #{vpath}`
-`git commit -m 'Update version to #{stringify(ver)}'`
+`git commit -F- <<EOF
+Update version to #{stringify(ver)}
+------------------
+Changes since #{previous_release}:
+#{previous_logs}
+EOF`
 
 puts "Creating #{stringify(ver)} tag in git"
 `git tag -a #{stringify(ver)} -m 'Tagging #{stringify(ver)}'`
 
-puts "Done. Please double check before pushing to remote/origin."
+puts "Current version is now #{stringify(ver)}"
+puts "Please double check before pushing to remote/origin."
