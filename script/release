@@ -9,7 +9,9 @@ end
 
 def stringify(ver)
   s = "v#{ver['major']}.#{ver['minor']}.#{ver['patch']}"
-  unless ver['pre-release'].empty?
+  if ver['pre-release'].empty?
+    s << "-final"
+  else
     s << "-#{ver['pre-release']}"
   end
   s
@@ -17,17 +19,32 @@ end
 
 def get_error(was_prerelease)
   if !(/major|minor|patch|pre|finalize/.match(ARGV[0]))
-    "You must specify major, minor, patch, pre, or finalize as the first argument"
-  elsif (/major|minor|patch/.match(ARGV[0]) && ARGV[1].nil?)
-    "You must supply a second argument (e.g. beta.1, beta.2, final)"
-  elsif (ARGV[0]=='finalize' && ARGV[1] && ARGV[1] != 'final')
-    "You're confusing me. Do you want to finalize this version or not??"
+    "You must specify major, minor, patch, pre, or finalize as the first argument."
+
+  elsif (/major|minor/.match(ARGV[0]) && ARGV[1].nil?)
+    "You must supply a second argument. (e.g. beta.1, beta.2, final)"
+
+  elsif (ARGV[0]=='finalize' && ARGV[1])
+    "The 'finalize' argument should not be followed by any other argument"
+
+  elsif (ARGV[0]=='finalize' && !was_prerelease)
+    "The current version is already final. Try creating a new major or minor version instead."
+
   elsif (/major|minor|patch/.match(ARGV[0]) && was_prerelease)
-    "You can't increment the #{ARGV[0]} version until you finalize the current one"
-  elsif (ARGV[0] == 'pre' && ARGV[1].nil?)
-    "You have to supply a second argument with pre (e.g. script/release pre alpha.3)"
+    "You can't increment the #{ARGV[0]} version until you finalize the current release."
+
+  elsif (ARGV[0] == 'pre' && ARGV[1] && !(/(alpha|beta|gamma)\.\d+/.match(ARGV[1])))
+    "Pre-release must be alpha, beta, or gamma followed by a '.' and a number. (e.g. beta.10)"
+
+  elsif (ARGV[0]=='patch' && ARGV[1] && ARGV[1] != 'final')
+    "Please remove the second argument. Patch releases are supposed to be stable and, therefore, final."
+
   elsif (ARGV[0] == 'pre' && !was_prerelease)
-    "You can't attach a pre-release version to a final release"
+    "The current version is already final. Try creating a new major or minor version instead."
+
+  elsif (ARGV[0] == 'pre' && ARGV[1].nil?)
+    "You have to supply a second argument with pre. (e.g. `script/release pre gamma2`)"
+
   else
     false
   end
@@ -35,24 +52,28 @@ end
 
 def show_help
   puts %{
-    Usage: `script/release major|minor|patch|pre pre-release-version`
+    Usage: `script/release major|minor|pre pre-release-version`
+           `script/release patch`
            `script/release finalize`
            `script/release help`
 
+    pre-release-version: Should be alpha, beta, or gamma followed by a '.' and a number.
+                         For example: alpha.2, beta.1, gamma.10
+
     Examples:
-      Assume original version is v1.2.3 in each of the following examples.
+      Assume original version is v1.2.3 in each of the following examples:
         script/release major beta.1   => v2.0.0-beta.1
-        script/release major final    => v2.0.0
+        script/release major final    => v2.0.0-final
         script/release minor beta.1   => v1.3.0-beta.1
-        script/release minor final    => v1.3.0
-        script/release patch beta.2   => v1.2.4-beta.2
-        script/release patch final    => v1.2.4
+        script/release minor final    => v1.3.0-final
+        script/release patch beta.2   => (Not allowed since patch releases are supposed to be stable)
+        script/release patch          => v1.2.4-final
         script/release pre beta.4     => (Not allowed since original version is already final)
 
-      Assume original version is v1.2.3-alpha1
+      Assume original version is v1.2.3-alpha.1 in each of the following examples:
         script/release pre alpha.2    => v1.2.3-alpha.2
         script/release pre beta.2     => v1.2.3-beta.2
-        script/release finalize       => v1.2.3
+        script/release finalize       => v1.2.3-final
         script/release pre            => (Not allowed. You must supply a pre-release version)
         script/release major beta.1   => (Not allowed since original version is not yet final)
   }
@@ -66,15 +87,14 @@ was_prerelease = !ver['pre-release'].empty?
 previous_release = stringify(ver)
 previous_logs = `git log --pretty=format:"%h %s" #{previous_release}..head`
 
-puts "Current version is #{previous_release}"
+puts "Current release is #{previous_release}"
 
 if ARGV[0]=='help'
   show_help
   exit 0
 end
 
-if ARGV[0]=='finalize' && !was_prerelease
-  puts "Nothing to do. Current version is already final."
+if ARGV[0].nil?
   exit 0
 end
 
@@ -85,7 +105,7 @@ end
 
 if get_error(was_prerelease)
   puts "ERROR: #{get_error(was_prerelease)}"
-  show_help
+  puts "Try `script/release help` for more information."
   exit 1
 end
 
@@ -106,7 +126,7 @@ when 'finalize'
   ver['pre-release'] = ''
 end
 
-if ARGV[0] != 'finalize' && ARGV[1] != 'final'
+if ARGV[0] != 'finalize' && ARGV[1] && ARGV[1] != 'final'
   ver['pre-release'] = ARGV[1]
 end
 
@@ -120,7 +140,7 @@ puts "Committing version.yml to #{/\* (.+)/.match(`git branch`)[1]}"
 `git add #{vpath}`
 `git commit -F- <<EOF
 Update version to #{stringify(ver)}
-------------------
+--------------------------------
 Changes since #{previous_release}:
 #{previous_logs}
 EOF`
