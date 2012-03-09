@@ -185,10 +185,7 @@
       }
 
       RD.dataIsIncomplete = function(){
-        if(RD.data.issues.length + RD.data.startAt + 1 < RD.data.total){
-          return true
-        }
-        return false;
+        return (RD.data.issues.length + RD.data.startAt + 1 < RD.data.total);
       }
 
       RD.updateProgress = function(){
