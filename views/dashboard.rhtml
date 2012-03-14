@@ -10,6 +10,7 @@
 
     <!-- Le styles -->
     <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <style>
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -23,15 +24,11 @@
         display: block;
       }
 
-      table {
-        border: 1px solid #000;
-        margin-bottom: 20px;
+      table.table {
         width: 100%;
       }
 
       td {
-        border: 1px solid black;
-        padding: 3px;
         width: 11%;
       }
 
@@ -39,25 +36,29 @@
         display: none;
       }
 
-      td.header{
-        background-color: gray;
+      .table tbody tr:hover td,
+      .table tbody tr:hover th {
+        background-color: inherit;
+      }
+
+      th.header{
+        background-color: gray !important;
         color: white;
       }
 
       td.open {
-        background-color: #336699;
+        background-color: #336699 !important;
         color: white;
       }
 
       td.in-progress, td.resolved, td.reopened{
-        background-color: yellow;
+        background-color: yellow !important;
       }
 
       td.closed{
-        background-color: green;
+        background-color: green !important;
       }
     </style>
-    <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -93,9 +94,9 @@
     </div> <!-- /container -->
 
     <div id="status-template">
-      <table class="status-root">
+      <table class="status-root table table-bordered">
         <tr>
-          <td class='header'>Activity</td>
+          <th class='header'>Activity</td>
           <td></td>
           <td></td>
           <td></td>
@@ -106,7 +107,7 @@
           <td></td>
         </tr>
         <tr>
-          <td class='header'>Assignee</td>
+          <th class='header'>Assignee</td>
           <td></td>
           <td></td>
           <td></td>
@@ -117,7 +118,7 @@
           <td></td>
         </tr>
         <tr>
-          <td class='header'>Due Date</td>
+          <th class='header'>Due Date</td>
           <td></td>
           <td></td>
           <td></td>
@@ -128,7 +129,7 @@
           <td></td>
         </tr>
         <tr>
-          <td class='header'>Status</td>
+          <th class='header'>Status</td>
           <td></td>
           <td></td>
           <td></td>
@@ -222,7 +223,7 @@
           var title = $(document.createElement('h2'));
           title.addClass('release-name');
           title.html("<a href='/show_issue/" + release.key + "' target='__rdashboard'/>");
-          title.children().first().text(release.fields.summary + ' - ' + release.fields.status.name);
+          title.children().first().html(release.fields.summary + ' <small>' + release.fields.status.name + '</small>');
           $('#container').append(title);
 
           var table = $('#status-template').clone().children().first();
