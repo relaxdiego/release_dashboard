@@ -8,7 +8,9 @@ module ReleaseDashboard
 
     # Runs before every route
     before do
-      if missing_vars.length > 0 && !['/', '/login', '/logout'].include?(request.path_info)
+      if missing_vars.length > 0 &&
+        !['/', '/login', '/logout'].include?(request.path_info) &&
+        !request.path_info.match(/^show_issue/)
         redirect to('/')
       end
     end
