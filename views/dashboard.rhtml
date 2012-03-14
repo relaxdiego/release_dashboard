@@ -221,7 +221,7 @@
         $(RD.releases).each(function(index, release){
           var title = $(document.createElement('h2'));
           title.addClass('release-name');
-          title.html("<a href='/show_release/" + release.key + "' target='__rdashboard'/>");
+          title.html("<a href='/show_issue/" + release.key + "' target='__rdashboard'/>");
           title.children().first().text(release.fields.summary + ' - ' + release.fields.status.name);
           $('#container').append(title);
 
@@ -239,7 +239,7 @@
 
           for(var i = 1; i < numColumns; i++){
             var subtask = RD.issues[subTasks[i-1].key];
-            $(activityCells[i]).text(subtask.fields.summary);
+            $(activityCells[i]).html("<a href='/show_issue/" + subtask.key + "' target='__rdashboard'>" + subtask.fields.summary + "</a>");
             $(statusCells[i]).text(subtask.fields.status.name);
             $(statusCells[i]).addClass(RD.cssify(subtask.fields.status.name));
             $(assigneeCells[i]).text(subtask.fields.assignee.displayName);

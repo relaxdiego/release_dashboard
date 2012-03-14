@@ -45,7 +45,7 @@ module ReleaseDashboard
       curl "search?jql=project=MCR&startAt=#{params[:start_at_index]}"
     end
 
-    get '/show_release/:issue_key' do
+    get '/show_issue/:issue_key' do
       redirect to("https://#{jira_host}/browse/#{params[:issue_key]}")
     end
 
