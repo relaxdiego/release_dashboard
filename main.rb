@@ -8,11 +8,6 @@ module ReleaseDashboard
 
     # Runs before every route
     before do
-      unless session[:host]
-        rd_config = YAML.load_file(File.open(File.expand_path('../config.yml',  __FILE__), 'r'))
-        session[:host] = rd_config['host']
-      end
-
       if missing_vars.length > 0 && !['/', '/login', '/logout'].include?(request.path_info)
         redirect to('/')
       end
@@ -43,7 +38,7 @@ module ReleaseDashboard
     end
 
     get '/show_release/:issue_key' do
-      redirect to("https://#{session[:host]}/browse/#{params[:issue_key]}")
+      redirect to("https://#{jira_host}/browse/#{params[:issue_key]}")
     end
 
     get '/dashboard' do
@@ -52,15 +47,27 @@ module ReleaseDashboard
 
     # Helper methods
     def curl(path)
-      `curl -k -u #{session[:username]}:#{session[:password]} -X GET -H "Content-Type: application/json" "https://#{session[:host]}/rest/api/2/#{path}"`
+      `curl -k -u #{username}:#{password} -X GET -H "Content-Type: application/json" "https://#{jira_host}/rest/api/2/#{path}"`
     end
 
     def session_var_keys
-      [:host, :username, :password]
+      [:username, :password]
     end
 
     def jira_host
-      "http://#{session[:host]}"
+      unless @jira_host
+        rd_config = YAML.load_file(File.open(File.expand_path('../config.yml',  __FILE__), 'r'))
+        @jira_host = rd_config['host']
+      end
+      @jira_host
+    end
+
+    def username
+      session[:username]
+    end
+
+    def password
+      session[:password]
     end
 
     def missing_vars
