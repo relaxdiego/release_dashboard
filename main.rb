@@ -27,6 +27,10 @@ module ReleaseDashboard
         session[key] = params[key]
       end
 
+      # Don't add this to session_var_keys. Otherwise, user
+      # won't be able to login if this param is not set.
+      session[:dev] = params[:dev]
+
       if authorized?
         redirect to('/dashboard'), 303
       else
@@ -44,7 +48,12 @@ module ReleaseDashboard
 
     get '/releases/:start_at_index' do
       content_type :json
-      curl "search?jql=project=MCR&startAt=#{params[:start_at_index]}"
+
+      if session[:dev]
+        File.open(File.expand_path('../mocks/data.json',  __FILE__), 'r').gets
+      else
+        curl "search?jql=project=MCR&startAt=#{params[:start_at_index]}"
+      end
     end
 
     get '/show_issue/:issue_key' do

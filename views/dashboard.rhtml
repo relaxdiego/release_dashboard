@@ -82,6 +82,9 @@
             <ul class="nav">
             </ul>
             <p class="navbar-text pull-right">
+              <% if session[:dev] %>
+              <span class="label label-warning">Dev mode. All data are mocks</span>
+              <% end %>
               <a href="/logout" style="color:white">Log-out</a>
             </p>
           </div><!--/.nav-collapse -->

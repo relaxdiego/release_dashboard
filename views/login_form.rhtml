@@ -64,8 +64,14 @@
               </div>
             </div>
           <% end %>
-          <div class="span1">&nbsp;</div>
-          <div class="span4"><input type="submit" value="Log in" class="btn-primary btn-large"/></div>
+          <% if params[:dev] %>
+          <div class="row">
+            <div class="span2 offset1"><input type="checkbox" name="dev" checked="true"/> Developer mode</div>
+          </div>
+          <% end %>
+          <div class="row">
+            <div class="span1 offset1"><input type="submit" value="Log in" class="btn-primary btn-large"/></div>
+          </div>
         </form>
       </div>
     </div> <!-- /container -->
