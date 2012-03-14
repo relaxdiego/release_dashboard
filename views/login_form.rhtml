@@ -42,10 +42,10 @@
     </div>
 
     <div class="container">
-      <h2>Please log in</h2>
+      <h2>Please log in <small>Use your <a href="<%= jira_host %>"><%= jira_host %></a> credentials</small></h2>
       <div>
         <form method="post" action="/login">
-          <% ['Host', 'Username', 'Password'].each do |field_name| %>
+          <% ['Username', 'Password'].each do |field_name| %>
             <div class="row">
               <div class="span1" style="margin-top:5px"><%= field_name %></div>
               <div class="span2"><input type="<%= field_name == 'Password' ? 'password' : 'text' %>" name="<%= field_name.downcase %>" style="width:150px"/></div>

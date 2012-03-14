@@ -8,6 +8,11 @@ module ReleaseDashboard
 
     # Runs before every route
     before do
+      unless session[:host]
+        rd_config = YAML.load_file(File.open(File.expand_path('../config.yml',  __FILE__), 'r'))
+        session[:host] = rd_config['host']
+      end
+
       if missing_vars.length > 0 && !['/', '/login', '/logout'].include?(request.path_info)
         redirect to('/')
       end
@@ -52,6 +57,10 @@ module ReleaseDashboard
 
     def session_var_keys
       [:host, :username, :password]
+    end
+
+    def jira_host
+      "http://#{session[:host]}"
     end
 
     def missing_vars
