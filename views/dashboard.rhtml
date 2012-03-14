@@ -89,7 +89,7 @@
     </div>
 
     <div id="container" class="container">
-      <h1 id="loading-text"><img src="/images/ajax-loader.gif"/> <span class="text">Loading 0%</span></h1>
+      <h1 id="loading-text"><img src="/images/ajax-loader.gif"/> <span class="text">Loading &nbsp;0%</span> <small>Please be patient.</small></h1>
     </div> <!-- /container -->
 
     <div id="status-template">
@@ -150,6 +150,9 @@
       RD = {};
       RD.releases = [];
       RD.issues = {};
+      RD.startAtIndex = 0;
+      RD.retries = 0;
+      RD.maxRetries = 5;
 
       RD.cssify = function(str){
         return str.toLowerCase().replace(/\W/g, '-');
@@ -158,6 +161,7 @@
       RD.indexIssues = function(){
         $(RD.data.issues).each(function(index, issue){
           RD.issues[issue.key] = issue;
+          RD.startAtIndex++;
         });
       }
 
@@ -174,10 +178,20 @@
       }
 
       RD.processData = function(){
+        if(RD.data==null && RD.retries < RD.maxRetries){
+          RD.getData(RD.startAtIndex);
+          RD.retries++;
+          console.log("Data returned was null retrying #" + RD.retries)
+          return;
+        } else if (RD.data==null){
+          alert("ERROR: Couldn't retrieve data from the server.")
+          return;
+        }
+
         RD.indexIssues();
         if(RD.dataIsIncomplete()){
           RD.updateProgress();
-          RD.getData(RD.data.issues.length);
+          RD.getData(RD.startAtIndex);
         } else {
           RD.findReleases();
           RD.displayReleases();
@@ -185,7 +199,7 @@
       }
 
       RD.dataIsIncomplete = function(){
-        return (RD.data.issues.length + RD.data.startAt + 1 < RD.data.total);
+        return (RD.startAtIndex + 1 < RD.data.total);
       }
 
       RD.updateProgress = function(){
