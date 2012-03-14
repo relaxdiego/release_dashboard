@@ -45,22 +45,15 @@
       <h2>Please log in <small>Use your <a href="https://<%= jira_host %>" target="__rdashboard"><%= jira_host %></a> credentials</small></h2>
       <div>
         <% if @login_error %>
-        <div class="alert alert-error">The username/password you entered was not recognized. Please try again.</div>
+        <div class="alert alert-error">The username/password you entered was not recognized by <a href="https://<%= jira_host %>" target="__rdashboard"><%= jira_host %></a>. Please try again.</div>
         <% end %>
         <form method="post" action="/login">
           <% ['Username', 'Password'].each do |field_name| %>
             <div class="row">
               <div class="span1" style="margin-top:5px"><%= field_name %></div>
               <div class="span2"><input type="<%= field_name == 'Password' ? 'password' : 'text' %>" name="<%= field_name.downcase %>" style="width:150px"/></div>
-              <div class="span5" style="margin-top:5px">
-                <%= case field_name.downcase
-                    when 'host'
-                      "e.g. issues.mycompanydomain.com"
-                    when 'username'
-                      "Your Jira username"
-                    when 'password'
-                      "Your Jira password"
-                    end %>
+              <div class="span1 help" style="padding-top:5px" rel="popover" data-original-title="Your Jira <%= field_name.downcase %>" data-content="Please type in the same <%= field_name.downcase %> that you use when logging in to https://<%= jira_host %>">
+                <i class="icon-question-sign">&nbsp;</i>
               </div>
             </div>
           <% end %>
@@ -81,5 +74,8 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="/js/jquery.min.js"></script>
     <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+      $('.help').popover();
+    </script>
   </body>
 </html>
