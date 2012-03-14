@@ -108,8 +108,8 @@ module ReleaseDashboard
     end
 
     def authorized?
-      if username.nil? || username.empty? || password.nil? || password.empty?
-         return false
+      if username.nil? || username.strip.empty? || password.nil? || password.strip.empty?
+        return false
       end
 
       result = `curl -D- -k -u #{username}:#{password} -X GET -H "Content-Type: application/json" "https://#{jira_host}/rest/api/2/project/MCR"`
