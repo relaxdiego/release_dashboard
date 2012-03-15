@@ -5,7 +5,7 @@ Dev Environment Prerequisites
 -----------------------------
 1. [Git](http://git-scm.com)
 2. [RVM](http://beginrescueend.com/) 1.10.2+
-3. [Ruby](ruby-lang.org/) 1.9.3-p125 (Should be installed via RVM)
+3. [Ruby](ruby-lang.org/) 1.9.2-p0 (Should be installed via RVM)
 4. [Pow](http://pow.cx/) 0.3.2+
 5. Xcode 4.1+ or [Command Line Tools](https://developer.apple.com/downloads/index.action)
 
