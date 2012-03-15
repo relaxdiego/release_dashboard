@@ -48,9 +48,9 @@
           <p>Sorry, but your login was not recognized by <%= jira_host %>. The
           server returned the following:</p>
           <div class="alert alert-error">
-            <%= @result.split("<!DOCTYPE html>")[0].rstrip.gsub("\n", "<br>") %>
+            <%= last_jira_response.split("<!DOCTYPE html>")[0].rstrip.gsub("\n", "<br>") %>
           </div>
-          <% if @result.match(/CAPTCHA_CHALLENGE/) %>
+          <% if last_jira_response.match(/CAPTCHA_CHALLENGE/) %>
           <div class="alert alert-info">
             It looks like you entered the wrong password too many times and made Jira very suspicious. Please
             <a href="https://<%= jira_host %>" target="__rdashboard">go to <%= jira_host %></a>
