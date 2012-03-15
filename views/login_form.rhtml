@@ -42,28 +42,36 @@
     </div>
 
     <div class="container">
-      <h2>Please log in <small>Use your <a href="https://<%= jira_host %>" target="__rdashboard"><%= jira_host %></a> credentials</small></h2>
-      <div>
-        <form method="post" action="/login">
+      <div class="span6 offset3 well">
+        <h2>Please log in</h2>
+        <small>Use your <a href="https://<%= jira_host %>" target="__rdashboard"><%= jira_host %></a> credentials</small>
+        <p>&nbsp;</p>
+        <form method="post" action="/login" class="form-horizontal">
           <% ['Username', 'Password'].each do |field_name| %>
-            <div class="row">
-              <div class="span1" style="margin-top:5px"><%= field_name %></div>
-              <div class="span2"><input type="<%= field_name == 'Password' ? 'password' : 'text' %>" name="<%= field_name.downcase %>" style="width:150px"/></div>
-              <div class="span1 help" style="padding-top:5px" rel="popover" data-original-title="Your Jira <%= field_name.downcase %>" data-content="Please type in the same <%= field_name.downcase %> that you use when logging in to https://<%= jira_host %>">
-                <i class="icon-question-sign">&nbsp;</i>
+            <div class="control-group">
+              <label class="control-label" for="<%= field_name %>"><%= field_name %></label>
+              <div class="controls">
+                <input type="<%= field_name == 'Password' ? 'password' : 'text' %>" name="<%= field_name.downcase %>" id="<%= field_name.downcase %>"/>
+                <div class="help help-inline" style="padding-top:5px" rel="popover" data-original-title="Your Jira <%= field_name.downcase %>" data-content="Please type in the same <%= field_name.downcase %> that you use when logging in to https://<%= jira_host %>">
+                  <i class="icon-question-sign">&nbsp;</i>
+                </div>
               </div>
             </div>
           <% end %>
           <% if params[:dev] %>
-          <div class="row">
-            <div class="span2 offset1"><input type="checkbox" name="dev" checked="true"/> Developer mode</div>
+          <div class="control-group">
+            <div class="controls">
+              <label class="checkbox">
+                <input type="checkbox" name="dev" id="dev" checked="true"/> Developer mode
+              </label>
+            </div>
           </div>
           <% end %>
-          <div class="row">
-            <div class="span1 offset1"><input type="submit" value="Log in" class="btn-primary btn-large"/></div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-large">Log in</button>
           </div>
         </form>
-      </div>
+      <div>
     </div> <!-- /container -->
 
     <!-- Le javascript
