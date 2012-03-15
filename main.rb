@@ -8,9 +8,7 @@ module ReleaseDashboard
 
     # Runs before every route
     before do
-      if missing_vars.length > 0 &&
-        !['/', '/login', '/logout'].include?(request.path_info) &&
-        !request.path_info.match(/show_issue/)
+      if not_logged_in? && requested_path_is_protected?
         redirect to('/')
       end
     end
@@ -106,6 +104,18 @@ module ReleaseDashboard
       s = "v#{ver['major']}.#{ver['minor']}.#{ver['patch']}"
       s << "-#{ver['pre-release']}" unless ver['pre-release'] == 'final'
       s
+    end
+
+    def logged_in?
+      username && password
+    end
+
+    def not_logged_in?
+      !logged_in?
+    end
+
+    def requested_path_is_protected?
+      !['/', '/login', '/logout'].include?(request.path_info) && !request.path_info.match(/show_issue/)
     end
 
     def authorized?
