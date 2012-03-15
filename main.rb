@@ -17,8 +17,6 @@ module ReleaseDashboard
 
     # Routes
     get '/' do
-      @login_error = session[:e] == 1
-      session[:e] = nil
       erb :login_form
     end
 
@@ -34,8 +32,7 @@ module ReleaseDashboard
       if authorized?
         redirect to('/dashboard'), 303
       else
-        session[:e] = 1
-        redirect to('/'), 303
+        erb :login_failed
       end
     end
 
@@ -109,11 +106,12 @@ module ReleaseDashboard
 
     def authorized?
       if username.nil? || username.strip.empty? || password.nil? || password.strip.empty?
+        @result = "Username and password should not be empty."
         return false
       end
 
-      result = `curl -D- -k -u #{username}:#{password} -X GET -H "Content-Type: application/json" "https://#{jira_host}/rest/api/2/project/MCR"`
-      result.include? "HTTP/1.1 200 OK"
+      @result = `curl -D- -k -u #{username}:#{password} -X GET -H "Content-Type: application/json" "https://#{jira_host}/rest/api/2/project/MCR"`
+      @result.include? "HTTP/1.1 200 OK"
     end
 
   end #class Application < Sinatra::Base
