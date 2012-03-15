@@ -30,6 +30,8 @@ if [ ! -e ~/.pow/rd ] ; then
   ln -s $RD_INSTALL_PATH ~/.pow/rd
 fi
 
+ruby script/add_host.rb $RD_HOST
+
 # Restart the server
 echo "Restarting Release Dashboard"
 touch tmp/restart.txt
