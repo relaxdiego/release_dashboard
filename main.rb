@@ -111,6 +111,7 @@ module ReleaseDashboard
       end
 
       @result = `curl -D- -k -u #{username}:#{password} -X GET -H "Content-Type: application/json" "https://#{jira_host}/rest/api/2/project/MCR"`
+      @result ||= "Unknown error. The server at #{jira_host} did not return anything."
       @result.include? "HTTP/1.1 200 OK"
     end
 
