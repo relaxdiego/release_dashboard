@@ -11,13 +11,18 @@ cfile = if File.exists? cpath
         end
 config = YAML.load_file(cfile)
 
+if ARGV[0] == "1"
+  puts "\033[0;31mOverwriting config.yml\033[0;m"
+  config = nil
+end
+
 if config && config['host']
   puts "\033[0;32mJira hostname in config.yml is already set to '#{config['host']}'"
 else
   config = {}
   puts "\033[0;31mWARNING: Jira hostname is not set in config.yml\033[0;m"
   print "Please type in the hostname (e.g. jira.mycompany.com): "
-  host = gets.chomp
+  host = STDIN.gets.chomp
   host.slice! /^https?:\/\//
   host.slice! /\/?$/
   puts "\033[0;32mSetting the hostname in config.yml to '#{host}'"
