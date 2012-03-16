@@ -10,8 +10,16 @@ module ReleaseDashboard
     # Runs before every route
     #=========================
     before do
-      if not_logged_in? && requested_path_is_protected?
-        redirect to('/')
+      if requested_path_is_protected? && not_logged_in?
+        if request.path_info == '/dashboard'
+          redirect to('/?session_expired=1')
+        else
+          # If the request is an XmlHttpRequest, return a 401 status
+          # so that it will know that the session has expired. A 302
+          # only makes it automatically follow the redirection which
+          # results in a 200 when jQuery.ajax() calls back.
+          redirect to('/'), (request.xhr? ? 401 : 302)
+        end
       end
     end
 
