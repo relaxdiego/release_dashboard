@@ -61,7 +61,7 @@ module ReleaseDashboard
 
     # Helper methods
     def curl(path)
-      `curl -k -u #{username}:#{password} -X GET -H "Content-Type: application/json" "https://#{jira_host}/rest/api/2/#{path}"`
+      `curl -k -u '#{username}:#{password}' -X GET -H "Content-Type: application/json" "https://#{jira_host}/rest/api/2/#{path}"`
     end
 
     def session_var_keys
@@ -124,7 +124,7 @@ module ReleaseDashboard
         return false
       end
 
-      @result = `curl -D- -k -u #{username}:#{password} -X GET -H "Content-Type: application/json" "https://#{jira_host}/rest/api/2/project/MCR"`
+      @result = `curl -D- -k -u '#{username}:#{password}' -X GET -H "Content-Type: application/json" "https://#{jira_host}/rest/api/2/project/MCR"`
       @result.include? "HTTP/1.1 200 OK"
     end
 
