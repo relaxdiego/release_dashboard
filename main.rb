@@ -77,11 +77,11 @@ module ReleaseDashboard
     end
 
     def username
-      session[:username]
+      session[:username] ||= nil
     end
 
     def password
-      session[:password]
+      session[:password] ||= nil
     end
 
     def missing_vars
