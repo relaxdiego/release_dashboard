@@ -24,7 +24,7 @@ if [ $RD_FORCE_SETUP -eq 1 ]; then
 fi
 
 # Add Release Dashboard to Pow if it's not already there
-if [ ! -e ~/.pow/rd ] ; then
+if [ -e ~/.pow ] && [ ! -e ~/.pow/rd ] ; then
   echo "Adding Release Dashboard to Pow"
   RD_INSTALL_PATH=`pwd`
   ln -s $RD_INSTALL_PATH ~/.pow/rd
@@ -32,8 +32,12 @@ fi
 
 ruby script/add_host.rb $RD_FORCE_SETUP
 
-# Restart the server
-echo "Restarting Release Dashboard"
-touch tmp/restart.txt
+if [ -e ~/.pow/rd ] ; then
+  # Restart the server
+  echo "Restarting Release Dashboard"
+  touch tmp/restart.txt
 
-echo -e "\033[0;32mSetup is done. Now go to http://rd.dev"
+  echo -e "\033[0;32mSetup is done. Now go to http://rd.dev\033[m"
+else
+  echo -e "\033[0;32mSetup is done. Run 'ruby main.rb' to test or configure your web server if you're deploying to production.\033[m"
+fi
