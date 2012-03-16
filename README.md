@@ -1,8 +1,8 @@
 Release Dashboard
 =================
 
-Dev Environment Prerequisites
------------------------------
+Prerequisites
+-------------
 1. Mac OS X or CentOS 5
 2. [Git](http://git-scm.com)
 3. [Ruby](ruby-lang.org/) 1.9.2-p0
