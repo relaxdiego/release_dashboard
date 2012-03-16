@@ -214,9 +214,16 @@
       RD.getData = function(startAtIndex){
         $.ajax({
           url: '/releases/' + startAtIndex,
+
           success: function(data){
             RD.data = data;
             RD.processData();
+          },
+
+          statusCode: {
+              401: function() {
+                window.location = '/?session_expired=1'
+              }
           }
         })
       }
