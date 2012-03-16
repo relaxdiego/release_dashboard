@@ -6,14 +6,18 @@ module ReleaseDashboard
   class Application < Sinatra::Base
     enable :sessions
 
+    #=========================
     # Runs before every route
+    #=========================
     before do
       if not_logged_in? && requested_path_is_protected?
         redirect to('/')
       end
     end
 
+    #========
     # Routes
+    #========
     get '/' do
       erb :login_form
     end
@@ -59,7 +63,9 @@ module ReleaseDashboard
       erb :dashboard
     end
 
+    #================
     # Helper methods
+    #================
     def curl(path)
       `curl -k -u '#{username}:#{password}' -X GET -H "Content-Type: application/json" "https://#{jira_host}/rest/api/2/#{path}"`
     end
