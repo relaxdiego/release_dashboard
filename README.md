@@ -3,35 +3,37 @@ Release Dashboard
 
 Dev Environment Prerequisites
 -----------------------------
-1. [Git](http://git-scm.com)
-2. [RVM](http://beginrescueend.com/) 1.10.2+
-3. [Ruby](ruby-lang.org/) 1.9.2-p0 (Should be installed via RVM)
-4. [Pow](http://pow.cx/) 0.3.2+
-5. Xcode 4.1+ or [Command Line Tools](https://developer.apple.com/downloads/index.action)
+1. Mac OS X or CentOS 5
+2. [Git](http://git-scm.com)
+3. [Ruby](ruby-lang.org/) 1.9.2-p0
 
-Got Xcode 4.2 or above?
---------------------------
-You'll want to work around LLVM GCC. Here's [a suggestion](http://www.relaxdiego.com/2012/02/using-gcc-when-xcode-43-is-installed.html).
+Mac OS X Additional Prerequisites
+---------------------------------
+1. Xcode 4.1+ or [Command Line Tools](https://developer.apple.com/downloads/index.action)
+2. If you have Xcode 4.2 or above, you'll want to work around LLVM GCC. Here's [a suggestion](http://www.relaxdiego.com/2012/02/using-gcc-when-xcode-43-is-installed.html).
 
-Dev Environment Installation
-----------------------------
+Mac OS X Optional Stuff
+-----------------------
+1. [Pow](http://pow.cx/) 0.3.2+
+
+Installation
+------------
 1. `git clone https://github.com/relaxdiego/release_dashboard`
 2. `cd release_dashboard` (if RVM asks, trust the .rvmrc file)
 3. `script/setup`
 
-Usage
------
-1. Point your browser to `http://rd.dev`
-2. There is no step 2
+CentOS 5 Additional Installation Steps
+--------------------------------------
+1. Install using [these suggested steps](https://gist.github.com/2048332).
+
+Getting updates
+---------------
+1. `git pull origin master`
+2. `script/setup`
 
 Found a bug?
 ------------
 Report it [here](https://github.com/relaxdiego/release_dashboard/issues).
-
-Getting updates
-------------
-1. `git pull origin master`
-2. `script/setup`
 
 Contributing
 ------------
