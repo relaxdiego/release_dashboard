@@ -34,7 +34,8 @@ module ReleaseDashboard
       if authorized?
         redirect to('/dashboard'), 303
       else
-        erb :login_failed
+        @login_failed = true
+        erb :login_form
       end
     end
 
