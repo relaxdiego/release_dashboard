@@ -1,0 +1,55 @@
+#========================
+#CONFIG
+#========================
+# Change the following values to fit your setup
+set :jira_host, "YOUR_JIRA_HOST"
+set :domain, "YOUR_DASHBOARD_HOST"
+set :repository, "git@github.com:relaxdiego/release_dashboard.git"
+set :user, "USERNAME_IN_DASHBOARD_HOST"
+set :use_sudo, true
+
+# Change the code below if you think you know what you're doing
+set :application, "Release Dashboard"
+set :scm, :git
+set :git_enable_submodules, 1
+set :branch, "master"
+set :ssh_options, { :forward_agent => true }
+set :stage, :production
+set :runner, "deploy"
+set :deploy_to, "/var/www/dashboard"
+set :app_server, :passenger
+
+default_run_options[:pty] = true
+
+#========================
+#ROLES
+#========================
+role :app, domain
+
+#========================
+#CUSTOM
+#========================
+namespace :deploy do
+
+  task :start, :roles => :app do
+    run "touch #{current_release}/tmp/restart.txt"
+  end
+
+  task :stop, :roles => :app do
+    # Do nothing.
+  end
+
+  desc "Restart Application"
+  task :restart, :roles => :app do
+    run "touch #{current_release}/tmp/restart.txt"
+  end
+
+end
+
+after :deploy, :roles => :app do
+  run "chgrp -R apache #{current_release}"
+  run "chmod g+w #{current_release}"
+  run "cd #{current_release} && script/setup" do |ch, stream, out|
+    ch.send_data "#{jira_host}\n"
+  end
+end

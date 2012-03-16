@@ -17,6 +17,7 @@
 /tmp
 
 /config/database.yml
+/config/deploy.rb
 /bin
 
 /coverage
