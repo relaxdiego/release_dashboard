@@ -83,8 +83,11 @@
             </ul>
             <p class="navbar-text pull-right">
               <% if session[:dev] %>
-              <span class="label label-warning">Dev mode. All data are mocks</span>
+                <span class="label label-warning">Dev mode. All data are mocks</span>
               <% end %>
+              <% if help_url %>
+                <a href="<%= help_url %>" style="color:white" target="__rdashboard">Help</a>
+              <% end %> |
               <a href="/logout" style="color:white">Log-out</a>
             </p>
           </div><!--/.nav-collapse -->

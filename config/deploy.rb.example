@@ -5,6 +5,7 @@
 set :jira_host, "YOUR_JIRA_HOST"
 set :domain, "YOUR_DASHBOARD_HOST"
 set :repository, "git@github.com:relaxdiego/release_dashboard.git"
+set :help_url, "YOUR_HELP_PAGE"
 set :user, "USERNAME_IN_DASHBOARD_HOST"
 set :use_sudo, true
 
@@ -51,5 +52,6 @@ after :deploy, :roles => :app do
   run "chmod g+w #{current_release}"
   run "cd #{current_release} && script/setup" do |ch, stream, out|
     ch.send_data "#{jira_host}\n"
+    ch.send_data "#{help_url}\n"
   end
 end

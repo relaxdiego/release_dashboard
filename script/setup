@@ -30,7 +30,7 @@ if [ -e ~/.pow ] && [ ! -e ~/.pow/rd ] ; then
   ln -s $RD_INSTALL_PATH ~/.pow/rd
 fi
 
-ruby script/add_host.rb $RD_FORCE_SETUP
+ruby script/configure.rb $RD_FORCE_SETUP
 
 if [ -e ~/.pow/rd ] ; then
   # Restart the server

@@ -91,6 +91,14 @@ module ReleaseDashboard
       @jira_host
     end
 
+    def help_url
+      unless @help_url
+        rd_config = YAML.load_file(File.open(File.expand_path('../config.yml',  __FILE__), 'r'))
+        @help_url = rd_config['help_url']
+      end
+      @help_url
+    end
+
     def username
       session[:username] ||= nil
     end
