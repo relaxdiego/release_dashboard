@@ -49,7 +49,7 @@ end
 
 after :deploy, :roles => :app do
   run "chgrp -R apache #{current_release}"
-  run "chmod g+w #{current_release}"
+  run "chmod -R g+w #{current_release}"
   run "cd #{current_release} && script/setup" do |ch, stream, out|
     ch.send_data "#{jira_host}\n"
     ch.send_data "#{help_url}\n"
