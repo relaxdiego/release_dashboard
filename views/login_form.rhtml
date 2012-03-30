@@ -54,7 +54,7 @@
           <p>Sorry, but your login was not recognized by <%= jira_host %>. The
           server at <a href="https://<%= jira_host %>" target="__rdashboard"><%= jira_host %></a> returned the following:</p>
           <div class="alert alert-error">
-            <%= last_jira_result.split("<!DOCTYPE html>")[0].rstrip.gsub("\n", "<br>") %>
+            <%= last_jira_result.split("<!DOCTYPE html>")[0].to_s.rstrip.gsub("\n", "<br>") %>
           </div>
           <% if last_jira_result.match(/CAPTCHA_CHALLENGE/) %>
             <div class="alert alert-info">
